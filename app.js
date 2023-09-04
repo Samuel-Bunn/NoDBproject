@@ -1,7 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
-import ViteExpress from 'vite-express'
-// import idGen from '../utils/idGen.js'
+import viteExpress from 'vite-express'
+import idGen from './src/utils/idGen.js'
 
 
 const app = express()
@@ -12,21 +12,60 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use(express.json())
 
-ViteExpress.config({ printViteDevServerHost: true })
+viteExpress.config({ printViteDevServerHost: true })
 
-const TEST_TASKS = 
-[
-    { id: 1, task: 'feed cat'},
-    { id: 2, task: 'walk cat'},
-    { id: 3, task: 'clean cat box'},
-    { id: 4, task: 'world domination'}
+const TEST_TASKS = [
+    { id: 0, task: 'feed cat'},
+    { id: 1, task: 'walk cat'},
+    { id: 2, task: 'clean cat box'},
+    { id: 3, task: 'world domination'}
 ]
 
-// const getNewId = idGen(TEST_TASKS.length)
+const getNewId = idGen(TEST_TASKS.length)
 
 
-// app.get('/api/toDoData', (req,res) => {
-//     res.json(TEST_TASKS)
-// })
+app.get('/api/toDoData', (req,res) => {
+    res.json(TEST_TASKS)
+})
 
-ViteExpress.listen(app,port, () => console.log(`Listening on http://localhost:${port}`))
+
+app.post('/api/toDoData', (req,res) => {
+    const { task } = req.body
+
+    const newTask = {
+        id: getNewId.next().value,
+        task,
+    }
+
+    TEST_TASKS.push(newTask)
+    res.json(TEST_TASKS)
+})
+
+app.post('/api/toDoData/:id/delete', (req,res) => {
+    let {id} = req.params
+    // console.log(id)
+    const index = TEST_TASKS.findIndex((data) => data.id === +id)
+    // console.log(index)
+    TEST_TASKS.splice(index,1)
+    // console.log(TEST_TASKS)
+    res.json(TEST_TASKS)
+})
+
+app.post('/api/toDoData/:id/edit', (req,res) => {
+    let {id} = req.params
+    let {task} = req.body
+
+    const index = TEST_TASKS.findIndex((data) => data.id === +id)
+
+    const data = TEST_TASKS[index]
+
+    data.task = task ?? data.task
+
+    res.json(data)
+
+})
+
+
+
+
+viteExpress.listen(app,port, () => console.log(`Listening on http://localhost:${port}`))

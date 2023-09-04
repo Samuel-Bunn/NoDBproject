@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './todoList.css'
 import idGen from '../utils/idGen.js'
+import axios from 'axios'
 
-const getNewId = idGen()
 
 const ToDoListHeader = () => {
     return (
@@ -40,7 +40,16 @@ const ToDoListRow = ({ initialTasks, onDeleteRow, initialIsEditing }) => {
     const [task, setTask] = useState(initialTasks) 
 
     const setEditMode = () => setIsEditMode(true)
-    const setNormalMode = () => setIsEditMode(false)
+    // const setNormalMode = () => setIsEditMode(false)
+    const setNormalMode = async () => {
+        const {data} = await axios.post(`/api/toDoData/${initialTasks.id}/edit`, {
+            task,
+            
+        })
+
+        setTask(data.task)
+        setIsEditMode(false)
+    }
     
     return(
         <div>    
@@ -73,34 +82,46 @@ const ToDoListAddButton = ({ onClick }) => {
 
 
 const ToDoList = ( {initialTasks} ) => {
+    console.log(initialTasks)
     const [taskList, setTaskList] = useState(initialTasks)
-
-    const addRow = () => {
+    console.log(taskList)
+    const getNewId = idGen(taskList.length)
+        // console.log(taskList)
+    const addRow =  async () => {
         // console.log('hit')
-        const newToDoList = [...taskList]
-        newToDoList.push({
-            id: getNewId.next().value,
-            task: '',
-            isEditMode: true,
+        const { data } = await axios.post('/api/toDoData', {
+            task:'enter task here',
         })
-        setTaskList(newToDoList)
+        console.log(data)
+        data[data.length - 1].isEditMode = true
+        // isEditMode = true
+        // const newToDoList = [...taskList]
+        // newToDoList.push({
+        //     id: getNewId.next().value,
+        //     task: '',
+        //     isEditMode: true,
+        // })
+        setTaskList(data)
     }
 
-    const deleteRow = (id) => {
-        const newToDoList = [...taskList]
-        const index = newToDoList.findIndex((task) => task.id === id)
-        newToDoList.splice(index,1)
-        setTaskList(newToDoList)
+    const deleteRow = async (id) => {
+        // const newToDoList = [...taskList]
+        // const index = newToDoList.findIndex((task) => task.id === id)
+        // newToDoList.splice(index,1)
+        let {data} = await axios.post(`/api/toDoData/${id}/delete`)
+        setTaskList(data)
     }
 
-    const rows = taskList.map(({ id, task, isEditMode }) => (
+    const rows = taskList.map(({ id, task, isEditMode }) => {
+        return(
             <ToDoListRow
             key={id}
-            initialTasks={task}
+            initialTasks={{task,id}}
             initialIsEditing={isEditMode}
             onDeleteRow={() => deleteRow(id)}
             />
-    ))
+        )
+        })
 
     return (
         <>
