@@ -1,0 +1,17 @@
+
+
+#headerWrapper {
+    justify-content: center;
+    display: flex;
+}
+
+li {
+    border: 2px solid black;
+    padding: 5px;
+    height: 23px;
+}
+
+#idButtonWrapper {
+    display: flex;
+    justify-content: center; 
+}
