@@ -31,7 +31,6 @@ app.get('/api/toDoData', (req,res) => {
 
 app.post('/api/toDoData', (req,res) => {
     const { task } = req.body
-
     const newTask = {
         id: getNewId.next().value,
         task,
@@ -43,11 +42,8 @@ app.post('/api/toDoData', (req,res) => {
 
 app.post('/api/toDoData/:id/delete', (req,res) => {
     let {id} = req.params
-    // console.log(id)
     const index = TEST_TASKS.findIndex((data) => data.id === +id)
-    // console.log(index)
     TEST_TASKS.splice(index,1)
-    // console.log(TEST_TASKS)
     res.json(TEST_TASKS)
 })
 
@@ -56,16 +52,10 @@ app.post('/api/toDoData/:id/edit', (req,res) => {
     let {task} = req.body
 
     const index = TEST_TASKS.findIndex((data) => data.id === +id)
-
     const data = TEST_TASKS[index]
 
     data.task = task ?? data.task
-
     res.json(data)
-
 })
-
-
-
 
 viteExpress.listen(app,port, () => console.log(`Listening on http://localhost:${port}`))

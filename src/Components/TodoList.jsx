@@ -7,7 +7,8 @@ import axios from 'axios'
 const ToDoListHeader = () => {
     return (
         <div id="headerWrapper">
-            <h1>TCOB</h1>
+            <h1>T.C.O.B.</h1>
+            <h4>Take Care Of Business</h4>
         </div>
     )
 }
@@ -28,7 +29,9 @@ const EditableRowModeButtons = ({isEditMode, onDeleteClick, onEditClick, onSaveC
 const EditableTaskCell = ( {value, isEditMode, onValueChange} ) => {
     return isEditMode ? (
         <li>
-            <input type="text" value={value} onChange={(e) => onValueChange(e.target.value)} ></input>
+            <span>
+                <input type="text" value={value} onChange={(e) => onValueChange(e.target.value)} ></input>
+            </span>
         </li>
     ) : (
         <li>{value}</li>
@@ -37,8 +40,8 @@ const EditableTaskCell = ( {value, isEditMode, onValueChange} ) => {
 
 const ToDoListRow = ({ initialTasks, onDeleteRow, initialIsEditing }) => {   
     const [isEditMode, setIsEditMode] = useState(initialIsEditing)
-    const [task, setTask] = useState(initialTasks) 
-
+    const [task, setTask] = useState(initialTasks.task) 
+    
     const setEditMode = () => setIsEditMode(true)
     // const setNormalMode = () => setIsEditMode(false)
     const setNormalMode = async () => {
@@ -82,9 +85,9 @@ const ToDoListAddButton = ({ onClick }) => {
 
 
 const ToDoList = ( {initialTasks} ) => {
-    console.log(initialTasks)
+    // console.log(initialTasks)
     const [taskList, setTaskList] = useState(initialTasks)
-    console.log(taskList)
+    // console.log(taskList)
     const getNewId = idGen(taskList.length)
         // console.log(taskList)
     const addRow =  async () => {
@@ -92,7 +95,7 @@ const ToDoList = ( {initialTasks} ) => {
         const { data } = await axios.post('/api/toDoData', {
             task:'enter task here',
         })
-        console.log(data)
+        // console.log(data)
         data[data.length - 1].isEditMode = true
         // isEditMode = true
         // const newToDoList = [...taskList]
@@ -116,7 +119,7 @@ const ToDoList = ( {initialTasks} ) => {
         return(
             <ToDoListRow
             key={id}
-            initialTasks={{task,id}}
+            initialTasks={{task, id}}
             initialIsEditing={isEditMode}
             onDeleteRow={() => deleteRow(id)}
             />

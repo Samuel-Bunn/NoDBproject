@@ -1,17 +1,44 @@
+* {
+    background-color: lightgray;
+    max-width: 80vw;
+    margin: 0 auto;
+}
 
+h1 {
+    font-size: 60px;
+    margin-top: 30px;
+}
+
+h4{
+    margin-bottom: 30px;
+}
 
 #headerWrapper {
     justify-content: center;
+    text-align: center;
     display: flex;
+    flex-direction: column;
 }
 
 li {
+    background-color: whitesmoke;
     border: 2px solid black;
-    padding: 5px;
-    height: 23px;
+    border-radius: 5px;
+    padding: 10px;
+    height: 20px;
 }
 
 #idButtonWrapper {
     display: flex;
     justify-content: center; 
+}
+
+input {
+    border: 0;
+    font-size: 14px;
+    background-color: whitesmoke;
+}
+
+button {
+    border-radius: 5px;
 }
